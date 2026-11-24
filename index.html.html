@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HARIM. | 노하림 — Public Administration & Digital Content</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Pretendard & Playfair Display / Inter Fonts -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet" />
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            cream: {
+              50: '#FDFCFA',
+              100: '#F9F6F0',
+              200: '#F1ECE1',
+              300: '#E5DEC9',
+            },
+            forest: {
+              800: '#1D352E',
+              900: '#132620',
+            },
+            blush: {
+              100: '#FCEEF2',
+              200: '#F7D6E0',
+              400: '#E57A9B',
+              500: '#D45D83',
+            },
+            ink: {
+              900: '#18181B',
+              700: '#3F3F46',
+              500: '#71717A',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* 에디토리얼 도트 패턴 배경 */
+    .bg-dot-pattern {
+      background-image: radial-gradient(rgba(19, 38, 32, 0.14) 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+
+    /* 은은한 페이드업 애니메이션 */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 카드 호버 디테일 */
+    .editorial-card {
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .editorial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px -12px rgba(19, 38, 32, 0.08);
+    }
+
+    /* 커스텀 스크롤바 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F9F6F0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D4CFC2;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #132620;
+    }
+  </style>
+</head>
+<body class="bg-cream-50 text-ink-900 font-sans antialiased selection:bg-blush-200 selection:text-forest-900 overflow-x-hidden">
+
+  <!-- ==================== 1. 상단 네비게이션 바 ==================== -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-cream-50/85 backdrop-blur-md border-b border-cream-200/80">
+    <div class="max-w-5xl mx-auto px-5 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
+      <!-- 로고 -->
+      <a href="#hero" class="group flex items-center gap-1.5 text-xl sm:text-2xl font-bold tracking-tight text-forest-900">
+        <span>HARIM</span>
+        <span class="inline-block w-2 h-2 rounded-full bg-blush-500 group-hover:scale-125 transition-transform"></span>
+      </a>
+
+      <!-- 데스크탑 메뉴 링크 -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-ink-700">
+        <a href="#about" class="hover:text-forest-900 transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blush-500 hover:after:w-full after:transition-all">About</a>
+        <a href="#interests" class="hover:text-forest-900 transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blush-500 hover:after:w-full after:transition-all">Interests</a>
+        <a href="#projects" class="hover:text-forest-900 transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blush-500 hover:after:w-full after:transition-all">Projects</a>
+        <a href="#contact" class="px-4 py-2 rounded-full bg-forest-900 text-cream-50 hover:bg-forest-800 transition-colors">Contact</a>
+      </nav>
+
+      <!-- 모바일 메뉴 버튼 -->
+      <button id="mobile-menu-btn" aria-label="메뉴 열기" class="md:hidden p-2.5 rounded-xl text-forest-900 hover:bg-cream-200/70 transition-colors">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- 모바일 드롭다운 메뉴 -->
+    <div id="mobile-menu" class="hidden md:hidden bg-cream-50 border-b border-cream-200 px-6 py-4 space-y-2 shadow-sm">
+      <a href="#about" class="mobile-link block py-2.5 px-3 rounded-xl text-base font-medium text-ink-700 hover:bg-cream-100 hover:text-forest-900">About</a>
+      <a href="#interests" class="mobile-link block py-2.5 px-3 rounded-xl text-base font-medium text-ink-700 hover:bg-cream-100 hover:text-forest-900">Interests</a>
+      <a href="#projects" class="mobile-link block py-2.5 px-3 rounded-xl text-base font-medium text-ink-700 hover:bg-cream-100 hover:text-forest-900">Projects</a>
+      <a href="#contact" class="mobile-link block py-2.5 px-3 rounded-xl text-base font-semibold text-blush-500 hover:bg-blush-100/60">Contact</a>
+    </div>
+  </header>
+
+  <!-- ==================== 2. HERO 섹션 ==================== -->
+  <section id="hero" class="relative pt-32 pb-20 sm:pt-40 sm:pb-28 bg-dot-pattern border-b border-cream-200">
+    <!-- 은은한 컬러 오브젝트 -->
+    <div class="pointer-events-none absolute top-24 right-8 sm:right-24 w-48 h-48 sm:w-72 sm:h-72 rounded-full bg-blush-200/35 blur-3xl"></div>
+    <div class="pointer-events-none absolute bottom-10 left-6 sm:left-20 w-52 h-52 rounded-full bg-cream-300/45 blur-3xl"></div>
+
+    <div class="relative max-w-5xl mx-auto px-5 sm:px-8">
+      <div class="max-w-3xl">
+        <!-- 상단 에디토리얼 뱃지 -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-cream-200 shadow-2xs mb-6 reveal">
+          <span class="w-2 h-2 rounded-full bg-blush-500 animate-pulse"></span>
+          <span class="text-xs sm:text-sm font-medium text-forest-900 tracking-tight">
+            전북대학교 행정학과 26학번 <span class="text-ink-500 mx-1">|</span> Public Administration & Digital Content
+          </span>
+        </div>
+
+        <!-- 메인 타이틀 -->
+        <h1 class="text-3xl sm:text-5xl lg:text-[3.25rem] font-bold text-forest-900 leading-[1.24] tracking-tight mb-6 reveal">
+          안녕하세요,<br class="sm:hidden" />
+          <span class="relative inline-block">
+            행정과 디지털의 연결
+            <span class="absolute left-0 bottom-1 w-full h-3 bg-blush-200/75 -z-10 rounded-sm"></span>
+          </span>을<br />
+          탐구하는 <span class="text-forest-800">노하림</span>입니다.
+        </h1>
+
+        <!-- 간단한 자기소개 한 줄 -->
+        <p class="text-base sm:text-lg text-ink-700 leading-relaxed mb-9 max-w-2xl reveal">
+          공공의 가치를 설계하는 행정학의 시선과 생성형 AI·디지털 콘텐츠 기획 역량을 더해, 일상의 작고 큰 문제를 다정하고 논리적으로 풀어갑니다.
+        </p>
+
+        <!-- CTA 버튼 그룹 -->
+        <div class="flex flex-wrap items-center gap-3.5 reveal">
+          <a href="#projects" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-forest-900 text-cream-50 text-sm sm:text-base font-medium hover:bg-forest-800 transition-all shadow-sm hover:shadow">
+            <span>프로젝트 보기</span>
+            <i data-lucide="arrow-down-right" class="w-4 h-4 text-blush-200"></i>
+          </a>
+          <a href="#contact" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white text-forest-900 border border-cream-300 text-sm sm:text-base font-medium hover:border-forest-900 hover:bg-cream-100/60 transition-all">
+            <i data-lucide="mail" class="w-4 h-4 text-blush-500"></i>
+            <span>이메일 보내기</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 하단 에디토리얼 인덱스 바 -->
+      <div class="mt-16 pt-6 border-t border-cream-200/90 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs sm:text-sm text-ink-500 reveal">
+        <div>
+          <span class="block font-serif italic text-forest-900 text-base">01. Major</span>
+          <span>전북대학교 행정학과 '26</span>
+        </div>
+        <div>
+          <span class="block font-serif italic text-forest-900 text-base">02. Focus</span>
+          <span>공공정책 · AI 생산성 · 웹 기획</span>
+        </div>
+        <div>
+          <span class="block font-serif italic text-forest-900 text-base">03. Location</span>
+          <span>Jeonju, South Korea</span>
+        </div>
+        <div>
+          <span class="block font-serif italic text-forest-900 text-base">04. Archive</span>
+          <span>기록과 성장을 담은 포트폴리오</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. ABOUT ME 섹션 ==================== -->
+  <section id="about" class="py-20 sm:py-28 bg-cream-50">
+    <div class="max-w-5xl mx-auto px-5 sm:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+        
+        <!-- 좌측 프로필 요약 카드 -->
+        <div class="lg:col-span-5 reveal">
+          <div class="bg-cream-100 rounded-3xl p-7 sm:p-8 border border-cream-200 relative overflow-hidden">
+            <!-- 상단 도트 데코 -->
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-forest-900"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-blush-400"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-cream-300"></span>
+              </div>
+              <span class="text-xs font-mono uppercase tracking-wider text-ink-500">PROFILE CARD · 2026</span>
+            </div>
+
+            <!-- 일러스트/모노그램 아바타 -->
+            <div class="w-20 h-20 rounded-2xl bg-forest-900 text-cream-50 flex items-center justify-center mb-5 shadow-sm relative">
+              <span class="font-serif italic text-3xl tracking-tight">NH</span>
+              <span class="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-blush-500 border-2 border-cream-100 flex items-center justify-center text-[10px] text-white font-bold">26</span>
+            </div>
+
+            <h2 class="text-2xl font-bold text-forest-900 mb-1">노하림 <span class="text-base font-normal text-ink-500 ml-1">Noh Harim</span></h2>
+            <p class="text-sm font-medium text-forest-800 mb-5">전북대학교(Jeonbuk National University) 행정학과 26학번 · 1학년</p>
+
+            <div class="space-y-2.5 pt-5 border-t border-cream-200 text-sm text-ink-700">
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="graduation-cap" class="w-4 h-4 text-blush-500 shrink-0"></i>
+                <span>사회과학대학 행정학과 재학</span>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="sparkles" class="w-4 h-4 text-blush-500 shrink-0"></i>
+                <span>Gemini · NotebookLM 기반 리서치 & 기획</span>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="book-open" class="w-4 h-4 text-blush-500 shrink-0"></i>
+                <span>위클리 저널 기록 및 인문 독서 모임</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 우측 상세 소개 및 키워드 -->
+        <div class="lg:col-span-7 flex flex-col justify-center reveal">
+          <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-blush-500 mb-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-blush-500"></span>
+            <span>About Me</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-bold text-forest-900 leading-snug mb-5">
+            구조적으로 사고하는 행정학도,<br />
+            유연하게 실험하는 디지털 메이커
+          </h3>
+          
+          <p class="text-base sm:text-[1.0625rem] text-ink-700 leading-relaxed mb-4">
+            공공 정책과 행정의 기초를 다지면서, AI 툴(Gemini, NotebookLM 등)과 디지털 콘텐츠 제작 역량을 결합해 문제를 창의적으로 해결하는 과정을 즐깁니다.
+          </p>
+          <p class="text-base sm:text-[1.0625rem] text-ink-700 leading-relaxed mb-7">
+            새내기 시절의 호기심을 흘려보내지 않고 매주 기록으로 남기며, 강의실에서 배운 사회과학적 시각을 실제 웹 프로토타입과 스토리텔링 콘텐츠로 확장해 나가고 있습니다.
+          </p>
+
+          <!-- 키워드 태그 -->
+          <div class="flex flex-wrap gap-2.5">
+            <span class="px-4 py-2 rounded-full bg-white border border-cream-200 text-sm font-medium text-forest-900 shadow-2xs hover:border-blush-400 transition-colors">
+              <span class="text-blush-500 mr-0.5">#</span>행정학도
+            </span>
+            <span class="px-4 py-2 rounded-full bg-white border border-cream-200 text-sm font-medium text-forest-900 shadow-2xs hover:border-blush-400 transition-colors">
+              <span class="text-blush-500 mr-0.5">#</span>AI활용러
+            </span>
+            <span class="px-4 py-2 rounded-full bg-white border border-cream-200 text-sm font-medium text-forest-900 shadow-2xs hover:border-blush-400 transition-colors">
+              <span class="text-blush-500 mr-0.5">#</span>디지털콘텐츠제작
+            </span>
+            <span class="px-4 py-2 rounded-full bg-white border border-cream-200 text-sm font-medium text-forest-900 shadow-2xs hover:border-blush-400 transition-colors">
+              <span class="text-blush-500 mr-0.5">#</span>기록과성장
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. INTERESTS & SKILLS 섹션 ==================== -->
+  <section id="interests" class="py-20 sm:py-28 bg-cream-100/80 border-y border-cream-200">
+    <div class="max-w-5xl mx-auto px-5 sm:px-8">
+      <!-- 섹션 헤더 -->
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4 reveal">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-blush-500 mb-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-blush-500"></span>
+            <span>Interests & Skills</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-forest-900 tracking-tight">관심 분야 및 핵심 역량</h2>
+        </div>
+        <p class="text-sm text-ink-500 max-w-sm">
+          전공의 깊이와 디지털 도구의 활용 능력을 균형 있게 연결합니다.
+        </p>
+      </div>
+
+      <!-- 4개 카드 그리드 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- 카드 1: 공공 행정 & 정책 탐구 -->
+        <div class="editorial-card bg-white rounded-3xl p-7 sm:p-8 border border-cream-200 reveal">
+          <div class="flex items-start justify-between mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-forest-900 text-cream-50 flex items-center justify-center">
+              <i data-lucide="landmark" class="w-5 h-5"></i>
+            </div>
+            <span class="font-serif italic text-sm text-ink-500">01 / Policy</span>
+          </div>
+          <h3 class="text-xl font-bold text-forest-900 mb-3">공공 행정 & 정책 탐구</h3>
+          <p class="text-sm sm:text-base text-ink-700 leading-relaxed mb-5">
+            사회 문제를 구조적으로 바라보고 합리적인 대안을 고민하는 전공 역량을 키우고 있습니다. 행정 실무의 기본기를 다지기 위해 한국사 및 컴퓨터활용능력 등 자격 역량도 함께 확장 중입니다.
+          </p>
+          <div class="flex flex-wrap gap-2 pt-3 border-t border-cream-100">
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-cream-100 text-forest-900">공공정책 분석</span>
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-cream-100 text-forest-900">사회문제 구조화</span>
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-cream-100 text-forest-900">실무 역량 확장</span>
+          </div>
+        </div>
+
+        <!-- 카드 2: AI & 디지털 생산성 -->
+        <div class="editorial-card bg-white rounded-3xl p-7 sm:p-8 border border-cream-200 reveal">
+          <div class="flex items-start justify-between mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-blush-100 text-blush-500 flex items-center justify-center">
+              <i data-lucide="cpu" class="w-5 h-5"></i>
+            </div>
+            <span class="font-serif italic text-sm text-ink-500">02 / AI Workflow</span>
+          </div>
+          <h3 class="text-xl font-bold text-forest-900 mb-3">AI & 디지털 생산성</h3>
+          <p class="text-sm sm:text-base text-ink-700 leading-relaxed mb-5">
+            생성형 AI(Gemini)와 NotebookLM 등을 적재적소에 활용하여 방대한 문헌과 자료를 체계적으로 조사·구조화하고, 보고서와 에세이 글쓰기의 완성도를 높입니다.
+          </p>
+          <div class="flex flex-wrap gap-2 pt-3 border-t border-cream-100">
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-blush-100/70 text-forest-900">Gemini 프롬프팅</span>
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-blush-100/70 text-forest-900">NotebookLM 리서치</span>
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-blush-100/70 text-forest-900">문서 구조화</span>
+          </div>
+        </div>
+
+        <!-- 카드 3: 디지털 콘텐츠 & 웹 기획 -->
+        <div class="editorial-card bg-white rounded-3xl p-7 sm:p-8 border border-cream-200 reveal">
+          <div class="flex items-start justify-between mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-blush-100 text-blush-500 flex items-center justify-center">
+              <i data-lucide="layout-template" class="w-5 h-5"></i>
+            </div>
+            <span class="font-serif italic text-sm text-ink-500">03 / Contents & Web</span>
+          </div>
+          <h3 class="text-xl font-bold text-forest-900 mb-3">디지털 콘텐츠 & 웹 기획</h3>
+          <p class="text-sm sm:text-base text-ink-700 leading-relaxed mb-5">
+            대학 글쓰기와 디지털 콘텐츠 제작 수업을 통해 사용자 중심의 메시지 전달법을 익히며, 머릿속 아이디어를 실제 작동하는 인터랙티브 웹 프로토타입으로 구현합니다.
+          </p>
+          <div class="flex flex-wrap gap-2 pt-3 border-t border-cream-100">
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-blush-100/70 text-forest-900">웹 프로토타이핑</span>
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-blush-100/70 text-forest-900">스토리텔링 기획</span>
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-blush-100/70 text-forest-900">대학 글쓰기</span>
+          </div>
+        </div>
+
+        <!-- 카드 4: 기록 & 문화 감상 -->
+        <div class="editorial-card bg-white rounded-3xl p-7 sm:p-8 border border-cream-200 reveal">
+          <div class="flex items-start justify-between mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-forest-900 text-cream-50 flex items-center justify-center">
+              <i data-lucide="feather" class="w-5 h-5"></i>
+            </div>
+            <span class="font-serif italic text-sm text-ink-500">04 / Archive & Culture</span>
+          </div>
+          <h3 class="text-xl font-bold text-forest-900 mb-3">기록 & 문화 감상</h3>
+          <p class="text-sm sm:text-base text-ink-700 leading-relaxed mb-5">
+            매주 배움과 일상을 정리하는 위클리 저널을 꾸준히 기록합니다. 독서와 작가 초청 특강, 영화 감상을 통해 타인의 삶과 시대를 이해하는 인문학적 감수성을 기릅니다.
+          </p>
+          <div class="flex flex-wrap gap-2 pt-3 border-t border-cream-100">
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-cream-100 text-forest-900">위클리 저널</span>
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-cream-100 text-forest-900">인문 독서</span>
+            <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-cream-100 text-forest-900">영화 큐레이션</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 5. PROJECTS & ACTIVITIES 섹션 ==================== -->
+  <section id="projects" class="py-20 sm:py-28 bg-cream-50">
+    <div class="max-w-5xl mx-auto px-5 sm:px-8">
+      <!-- 섹션 헤더 -->
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4 reveal">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-blush-500 mb-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-blush-500"></span>
+            <span>Projects & Activities</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-forest-900 tracking-tight">주요 활동 및 프로젝트</h2>
+        </div>
+        <!-- 필터 탭 버튼 -->
+        <div class="inline-flex p-1 rounded-full bg-cream-100 border border-cream-200 self-start sm:self-auto">
+          <button data-filter="all" class="filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-forest-900 text-cream-50 transition-all">전체</button>
+          <button data-filter="project" class="filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium text-ink-700 hover:text-forest-900 transition-all">기획·AI</button>
+          <button data-filter="activity" class="filter-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium text-ink-700 hover:text-forest-900 transition-all">교내·문화</button>
+        </div>
+      </div>
+
+      <!-- 타임라인 & 카드 리스트 -->
+      <div class="relative border-l-2 border-cream-200 ml-3 sm:ml-5 space-y-8 pl-6 sm:pl-10">
+        
+        <!-- 프로젝트 1 -->
+        <article data-category="project" class="project-item editorial-card relative bg-white rounded-3xl p-6 sm:p-8 border border-cream-200 reveal">
+          <span class="absolute -left-[33px] sm:-left-[49px] top-8 w-4 h-4 rounded-full bg-blush-500 border-4 border-cream-50"></span>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blush-100 text-blush-500">
+              Web Planning · Interactive
+            </span>
+            <span class="text-xs font-mono text-ink-500">2026 · Digital Content</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-forest-900 mb-2.5">
+            유아용 그림자 맞추기 인터랙티브 웹 앱 기획
+          </h3>
+          <p class="text-sm sm:text-base text-ink-700 leading-relaxed mb-4">
+            3~5세 유아의 시각적 인지와 호기심을 자극하는 동물·공룡·바다생물 테마의 교육용 웹 애플리케이션을 기획했습니다. 직관적인 실루엣 퀴즈 UX와 친근한 피드백 구조를 설계하여 놀이와 학습이 자연스럽게 이어지도록 구성했습니다.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs text-ink-500">
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#에듀테크기획</span>
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#유아인터랙션</span>
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#웹프로토타입</span>
+          </div>
+        </article>
+
+        <!-- 프로젝트 2 -->
+        <article data-category="project" class="project-item editorial-card relative bg-white rounded-3xl p-6 sm:p-8 border border-cream-200 reveal">
+          <span class="absolute -left-[33px] sm:-left-[49px] top-8 w-4 h-4 rounded-full bg-forest-900 border-4 border-cream-50"></span>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-cream-200 text-forest-900">
+              AI-X PBL · Seminar
+            </span>
+            <span class="text-xs font-mono text-ink-500">2026 · JBNU</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-forest-900 mb-2.5">
+            JBNU AIX-PBL 성과공유회 및 AI 활용 세미나 참여
+          </h3>
+          <p class="text-sm sm:text-base text-ink-700 leading-relaxed mb-4">
+            생성형 AI를 활용한 문제 해결형 학습(AIX-PBL) 과정과 세미나에 참여하며 전공 영역에 AI 워크플로우를 접목하는 실전 감각을 익혔습니다. 자료 탐색부터 인사이트 도출까지의 효율적인 협업 프로세스를 경험했습니다.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs text-ink-500">
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#AIX_PBL</span>
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#생성형AI실습</span>
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#문제해결프로젝트</span>
+          </div>
+        </article>
+
+        <!-- 프로젝트 3 -->
+        <article data-category="activity" class="project-item editorial-card relative bg-white rounded-3xl p-6 sm:p-8 border border-cream-200 reveal">
+          <span class="absolute -left-[33px] sm:-left-[49px] top-8 w-4 h-4 rounded-full bg-blush-500 border-4 border-cream-50"></span>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blush-100 text-blush-500">
+              Storytelling · Media
+            </span>
+            <span class="text-xs font-mono text-ink-500">2026 · Campus Community</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-forest-900 mb-2.5">
+            '찬란' 행사 영상 편지 기획 및 스크립트 제작
+          </h3>
+          <p class="text-sm sm:text-base text-ink-700 leading-relaxed mb-4">
+            동료 및 선배들과 함께한 '찬란' 행사에서 공동체의 응원과 성장을 담아내는 영상 편지를 기획하고 전체 내레이션 스크립트를 집필했습니다. 진정성 있는 스토리텔링으로 구성원 간의 유대감을 높이는 데 기여했습니다.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs text-ink-500">
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#영상기획</span>
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#스크립트작성</span>
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#협업과소통</span>
+          </div>
+        </article>
+
+        <!-- 프로젝트 4 -->
+        <article data-category="activity" class="project-item editorial-card relative bg-white rounded-3xl p-6 sm:p-8 border border-cream-200 reveal">
+          <span class="absolute -left-[33px] sm:-left-[49px] top-8 w-4 h-4 rounded-full bg-forest-900 border-4 border-cream-50"></span>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-cream-200 text-forest-900">
+              Humanities · Lecture
+            </span>
+            <span class="text-xs font-mono text-ink-500">2026 · JBNU Central Library</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-forest-900 mb-2.5">
+            전북대학교 중앙도서관 작가 초청 특강 참여
+          </h3>
+          <p class="text-sm sm:text-base text-ink-700 leading-relaxed mb-4">
+            김초엽 작가, 박준 시인 등 동시대 문학인들의 초청 강연에 참여하며 기술과 인간, 그리고 다정한 시선에 대한 사유를 넓혔습니다. 강연 후 느낀 단상들을 기록으로 남기며 행정학도로서의 인문학적 기반을 다졌습니다.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs text-ink-500">
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#김초엽작가</span>
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#박준시인</span>
+            <span class="px-2.5 py-1 rounded-md bg-cream-100">#인문학적소양</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 6. CONTACT & FOOTER 섹션 ==================== -->
+  <section id="contact" class="py-20 sm:py-28 bg-forest-900 text-cream-50 relative overflow-hidden">
+    <!-- 배경 은은한 도트/원형 포인트 -->
+    <div class="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-blush-500/15 blur-3xl"></div>
+    <div class="pointer-events-none absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-cream-100/5 blur-3xl"></div>
+
+    <div class="relative max-w-5xl mx-auto px-5 sm:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <!-- 좌측 연락처 및 환영 메시지 -->
+        <div class="lg:col-span-6 reveal">
+          <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-blush-200 mb-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-blush-400"></span>
+            <span>Contact & Connect</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white leading-tight mb-4">
+            함께 배우고 연결될<br />
+            새로운 대화를 기다립니다.
+          </h2>
+          <p class="text-cream-200/85 text-sm sm:text-base leading-relaxed mb-8 max-w-md">
+            공공정책 및 AI 활용 스터디, 디지털 콘텐츠·웹 기획 협업, 혹은 가벼운 캠퍼스 네트워킹까지 언제든 편하게 연락해 주세요!
+          </p>
+
+          <!-- 원클릭 이메일 복사 카드 -->
+          <div class="bg-forest-800/80 border border-cream-50/15 rounded-2xl p-5 max-w-md">
+            <span class="block text-xs text-cream-300/80 mb-1.5">Direct Email (클릭하여 주소 복사)</span>
+            <div class="flex items-center justify-between gap-3">
+              <span id="email-text" class="font-mono text-sm sm:text-base text-white truncate">harim.noh26@jbnu.ac.kr</span>
+              <button id="copy-email-btn" type="button" class="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blush-500 hover:bg-blush-400 text-white text-xs sm:text-sm font-medium transition-colors cursor-pointer">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>복사하기</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 우측 방명록 / 메시지 남기기 인터랙티브 폼 -->
+        <div class="lg:col-span-6 reveal">
+          <div class="bg-cream-50 text-ink-900 rounded-3xl p-6 sm:p-8 shadow-xl">
+            <div class="flex items-center justify-between mb-5">
+              <h3 class="text-lg sm:text-xl font-bold text-forest-900">방명록 & 메시지 남기기</h3>
+              <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-blush-100 text-blush-500">Guestbook</span>
+            </div>
+
+            <form id="guestbook-form" class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label for="sender-name" class="block text-xs font-semibold text-ink-700 mb-1.5">이름 / 소속</label>
+                  <input id="sender-name" type="text" required placeholder="예: 김전북 / 행정학과" class="w-full px-4 py-2.5 rounded-xl bg-white border border-cream-300 text-sm focus:outline-none focus:border-forest-900 transition-colors" />
+                </div>
+                <div>
+                  <label for="sender-topic" class="block text-xs font-semibold text-ink-700 mb-1.5">관심 주제</label>
+                  <select id="sender-topic" class="w-full px-4 py-2.5 rounded-xl bg-white border border-cream-300 text-sm focus:outline-none focus:border-forest-900 transition-colors">
+                    <option value="협업 제안">협업 · 프로젝트 제안</option>
+                    <option value="스터디">AI · 전공 스터디</option>
+                    <option value="응원/인사">가벼운 인사 · 응원</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label for="sender-message" class="block text-xs font-semibold text-ink-700 mb-1.5">메시지</label>
+                <textarea id="sender-message" rows="3" required placeholder="하림님에게 전하고 싶은 이야기를 남겨주세요." class="w-full px-4 py-2.5 rounded-xl bg-white border border-cream-300 text-sm focus:outline-none focus:border-forest-900 transition-colors resize-none"></textarea>
+              </div>
+
+              <button type="submit" class="w-full py-3 px-5 rounded-xl bg-forest-900 hover:bg-forest-800 text-cream-50 text-sm font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                <i data-lucide="send" class="w-4 h-4 text-blush-200"></i>
+                <span>메시지 등록하기</span>
+              </button>
+            </form>
+
+            <!-- 등록된 방명록 리스트 미리보기 -->
+            <div class="mt-6 pt-5 border-t border-cream-200">
+              <span class="block text-xs font-semibold text-ink-500 mb-3">최근 남겨진 메시지</span>
+              <div id="guestbook-list" class="space-y-2.5 max-h-40 overflow-y-auto pr-1">
+                <div class="p-3 rounded-xl bg-cream-100/80 border border-cream-200 text-xs">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-forest-900">JBNU 동기 · 응원/인사</span>
+                    <span class="text-ink-500">2026.11</span>
+                  </div>
+                  <p class="text-ink-700">하림아! 행정학이랑 AI 기획 같이 탐구하는 모습 너무 멋지다. 앞으로의 프로젝트도 응원해!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer 하단 -->
+      <footer class="mt-16 pt-8 border-t border-cream-50/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-cream-300/75">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-white tracking-tight">HARIM<span class="text-blush-400">.</span></span>
+          <span>— Jeonbuk National University Dept. of Public Administration '26</span>
+        </div>
+        <p>Copyright © 2026 Noh Harim. All rights reserved.</p>
+      </footer>
+    </div>
+  </section>
+
+  <!-- ==================== 토스트 알림 UI ==================== -->
+  <div id="toast" role="status" aria-live="polite" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+    <div class="flex items-center gap-2.5 px-5 py-3 rounded-full bg-forest-900 text-cream-50 border border-cream-50/15 shadow-lg text-xs sm:text-sm font-medium">
+      <span class="w-2 h-2 rounded-full bg-blush-400"></span>
+      <span id="toast-message">이메일 주소가 클립보드에 복사되었습니다.</span>
+    </div>
+  </div>
+
+  <!-- ==================== 인터랙티브 스크립트 ==================== -->
+  <script>
+    // 1. Lucide 아이콘 초기화
+    lucide.createIcons();
+
+    // 2. 토스트 알림 헬퍼 함수
+    let toastTimer;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.textContent = message;
+
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-3');
+      }, 2800);
+    }
+
+    // 3. 모바일 네비게이션 토글
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // 4. 스크롤 페이드인 애니메이션 (IntersectionObserver)
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -30px 0px'
+    });
+
+    revealElements.forEach((el) => revealObserver.observe(el));
+
+    // 5. 프로젝트 카테고리 필터링
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectItems = document.querySelectorAll('.project-item');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        // 버튼 스타일 업데이트
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-forest-900', 'text-cream-50');
+          b.classList.add('text-ink-700');
+        });
+        btn.classList.add('bg-forest-900', 'text-cream-50');
+        btn.classList.remove('text-ink-700');
+
+        // 카드 필터링
+        projectItems.forEach(item => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.classList.remove('hidden');
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // 6. 이메일 주소 원클릭 복사 기능 (iframe 환경 호환 execCommand 사용)
+    const copyEmailBtn = document.getElementById('copy-email-btn');
+    const emailText = document.getElementById('email-text').textContent.trim();
+
+    copyEmailBtn.addEventListener('click', () => {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = emailText;
+      tempInput.style.position = 'fixed';
+      tempInput.style.opacity = '0';
+      document.body.appendChild(tempInput);
+      tempInput.select();
+
+      try {
+        document.execCommand('copy');
+        showToast(`이메일 주소(${emailText})가 복사되었습니다.`);
+      } catch (err) {
+        showToast('복사에 실패했습니다. 주소를 직접 선택해 주세요.');
+      } finally {
+        document.body.removeChild(tempInput);
+      }
+    });
+
+    // 7. 방명록 / 메시지 남기기 인터랙티브 폼
+    const guestbookForm = document.getElementById('guestbook-form');
+    const guestbookList = document.getElementById('guestbook-list');
+
+    guestbookForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const nameInput = document.getElementById('sender-name');
+      const topicSelect = document.getElementById('sender-topic');
+      const messageInput = document.getElementById('sender-message');
+
+      const nameVal = nameInput.value.trim();
+      const topicVal = topicSelect.value;
+      const messageVal = messageInput.value.trim();
+
+      if (!nameVal || !messageVal) return;
+
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+
+      const itemEl = document.createElement('div');
+      itemEl.className = 'p-3 rounded-xl bg-white border border-blush-200 text-xs transition-all';
+
+      const headerEl = document.createElement('div');
+      headerEl.className = 'flex items-center justify-between mb-1';
+
+      const authorEl = document.createElement('span');
+      authorEl.className = 'font-bold text-forest-900';
+      authorEl.textContent = `${nameVal} · ${topicVal}`;
+
+      const timeEl = document.createElement('span');
+      timeEl.className = 'text-ink-500';
+      timeEl.textContent = dateStr;
+
+      const bodyEl = document.createElement('p');
+      bodyEl.className = 'text-ink-700 leading-relaxed';
+      bodyEl.textContent = messageVal;
+
+      headerEl.appendChild(authorEl);
+      headerEl.appendChild(timeEl);
+      itemEl.appendChild(headerEl);
+      itemEl.appendChild(bodyEl);
+
+      guestbookList.prepend(itemEl);
+      guestbookForm.reset();
+      showToast('소중한 메시지가 방명록에 등록되었습니다!');
+    });
+  </script>
+</body>
+</html>
